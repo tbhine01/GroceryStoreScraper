@@ -2,8 +2,8 @@ from playwright.sync_api import sync_playwright, Playwright
 from rich import print
 import json 
 
-def scrape_quotes(playwright):
-    start_url = "https://www.aldi.us/products"
+def scrape_products(playwright, page_number=1):
+    start_url = f"https://www.aldi.us/products?page={page_number}"
     browser = playwright.chromium.launch(headless=False)
     page = browser.new_page()
     page.goto(start_url)
@@ -44,4 +44,4 @@ def scrape_quotes(playwright):
     browser.close()
 
 with sync_playwright() as playwright:
-    scrape_quotes(playwright)
+    scrape_products(playwright, page_number=1)
