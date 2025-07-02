@@ -34,7 +34,21 @@ def scrape_products(playwright):
                 if data_attr:
                     try:
                         json_data = json.loads(data_attr)
-                        print(json_data)
+                        product = json_data.get("productDetails", {})
+                        images = product.get("images", [])
+
+                        filtered = {
+                            "description": product.get("description"),
+                            "brand":product.get("brand"),
+                            "upc": product.get("upc"),
+                            "finalPrice": product.get("finalPrice"),
+                            "originalPrice": product.get("originalPrice"),
+                            "coupons": product.get("coupons", []),
+                            "offers": product.get("offers", []),
+                            "imageUrl": images[0] if images else None,
+                            "category": product.get("category"),
+                        }
+                        print(filtered)
                     except Exception as e:
                         print(f"[red]Error parsing JSON: {e}[/red]")
                 else:

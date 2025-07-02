@@ -24,8 +24,20 @@ def scrape_products(playwright, page_number=1):
                 data = script.text_content()
                 try:
                     json_data = json.loads(data)
+                    product = json_data.get("offers", {})
+                    images = json_data.get("image", [])
+                    brand_name = None   
+                    if "brand" in json_data and isinstance(json_data["brand"], dict):
+                        brand_name = json_data["brand"].get("name")
+                    filtered = {
+                        "name": json_data.get("name"),
+                        "brand": json_data.get("brand", {}).get("name", brand_name),
+                        "productID": json_data.get("productID"),
+                        "price": product.get("price"),
+                        "imageUrl": images[0] if images else None,
+                      }
                     if isinstance(json_data, dict) and "name" in json_data:
-                        print(json_data)
+                        print(filtered)
                     else:
                         print("[yellow]No 'name' found in JSON data[/yellow]")
                 except Exception as e:
